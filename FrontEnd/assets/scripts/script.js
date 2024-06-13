@@ -49,19 +49,26 @@ const divFilterCategory = document.querySelector('.category-menu');
 // Création des boutons
 // Création du bouton 'TOUS'
 const btnAll = document.createElement('button');
-btnAll.setAttribute("class", "btn-all");
+btnAll.setAttribute("class", "btn");
+btnAll.setAttribute("id", "btn1")
 btnAll.textContent = 'Tous';
 // Création du bouton 'Objet'
 const btnObject = document.createElement('button');
-btnObject.setAttribute("class", "btn-objects");
+btnObject.setAttribute("class", "btn");
+btnObject.setAttribute("id", "btn2")
+
 btnObject.textContent = 'Objets';
 // Création du bouton 'Appartements'
 const btnApartment = document.createElement('button');
-btnApartment.setAttribute("class", "btn-Apartment");
+btnApartment.setAttribute("class", "btn");
+btnApartment.setAttribute("id", "btn3")
+
 btnApartment.textContent = 'Appartements';
 // Création du bouton 'Hotel & Restaurants'
 const btnHotelsRestaurant = document.createElement('button');
-btnHotelsRestaurant.setAttribute("class", "btn-hotels-and-restaurants");
+btnHotelsRestaurant.setAttribute("class", "btn");
+btnHotelsRestaurant.setAttribute("id", "btn4")
+
 btnHotelsRestaurant.textContent = 'Hotels & restaurants';
 
 // Rattacher les boutons
@@ -69,4 +76,33 @@ divFilterCategory.appendChild(btnAll);
 divFilterCategory.appendChild(btnObject);
 divFilterCategory.appendChild(btnApartment);
 divFilterCategory.appendChild(btnHotelsRestaurant);
+
+// Ajout de l'évenement au click
+btnAll.addEventListener('click', () => {
+  const worksFilter = works.filter(function (works) {
+    return works.categoryId;
+  })
+  console.log(worksFilter);
+});
+
+btnObject.addEventListener('click', () => {
+  const worksFilter = works.filter(function (works) {
+    return works.categoryId === 1;
+  })
+  // console.log(worksFilter);
+});
+
+btnApartment.addEventListener('click', () => {
+  const worksFilter = works.filter(function (works) {
+    return works.categoryId === 2;
+  })
+  // console.log(worksFilter);
+});
+
+btnHotelsRestaurant.addEventListener('click', () => {
+  const worksFilter = works.filter(function (works) {
+    return works.categoryId === 3;
+  })
+  // console.log(worksFilter);
+});
 
