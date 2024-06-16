@@ -6,15 +6,11 @@ const works = await reponse.json();
 
 // fonction qui permet de récupérer les travaux depuis l'API
 function genererWorks(works) {
-  // boucle listant les projets
   for (let i = 0; i < works.length; i++) {
-    // console.log(i);
     const figure = works[i];
-    // console.log(figure);
 
     // Récupération des éléments du DOM
     const divGallery = document.querySelector('.gallery');
-    // Création d'une balise figure pour acceuillir chaques projets
     const worksElement = document.createElement('figure');
 
     // Création des balises
@@ -22,87 +18,87 @@ function genererWorks(works) {
     imageElement.src = figure.imageUrl
     const titleElement = document.createElement('figcaption');
     titleElement.innerText = figure.title;
-    // Ajout de la categoryID
     const categoryIdElement = document.createElement("p");
     categoryIdElement.innerText = figure.categoryId;
-    // console.log(categoryIdElement);
 
-    // Rattacher la balise 'figure' avec la div 'gallery'
+    // Rattacher les balises
     divGallery.appendChild(worksElement);
-    // Rattacher l'image et le titre à la balise 'figure'
     worksElement.appendChild(imageElement);
     worksElement.appendChild(titleElement);
-    // Rattacher la categoryID à la balise 'figure'
     worksElement.appendChild(categoryIdElement);
   }
 }
 // Appel de la fonction
 genererWorks(works);
 
-// ------ PARTIE FILTRES ------ //
-
-// Création des boutons
 // Récupération de l"élément du DOM 
 const divFilterCategory = document.querySelector('.category-menu');
-// console.log(FilterCategory);
+// console.log(divFilterCategory);
 
-// Création des boutons
-// Création du bouton 'TOUS'
+// Création du bouton 'Tous'
 const btnAll = document.createElement('button');
 btnAll.setAttribute("class", "btn");
-btnAll.setAttribute("id", "btn1")
 btnAll.textContent = 'Tous';
-// Création du bouton 'Objet'
-const btnObject = document.createElement('button');
-btnObject.setAttribute("class", "btn");
-btnObject.setAttribute("id", "btn2")
-
-btnObject.textContent = 'Objets';
-// Création du bouton 'Appartements'
-const btnApartment = document.createElement('button');
-btnApartment.setAttribute("class", "btn");
-btnApartment.setAttribute("id", "btn3")
-
-btnApartment.textContent = 'Appartements';
-// Création du bouton 'Hotel & Restaurants'
-const btnHotelsRestaurant = document.createElement('button');
-btnHotelsRestaurant.setAttribute("class", "btn");
-btnHotelsRestaurant.setAttribute("id", "btn4")
-
-btnHotelsRestaurant.textContent = 'Hotels & restaurants';
-
-// Rattacher les boutons
+// Rattacher le bouton 'Tous'
 divFilterCategory.appendChild(btnAll);
-divFilterCategory.appendChild(btnObject);
-divFilterCategory.appendChild(btnApartment);
-divFilterCategory.appendChild(btnHotelsRestaurant);
-
-// Ajout de l'évenement au click
+// Ajout du listener pour trier 'tous' les travaux
 btnAll.addEventListener('click', () => {
   const worksFilter = works.filter(function (works) {
     return works.categoryId;
   })
-  console.log(worksFilter);
+  // Effacement de l'écran et regénération de la page avec le filtrage effectué
+  document.querySelector(".gallery").innerHTML = "";
+  genererWorks(worksFilter);
 });
 
+
+// Création du bouton 'Objet'
+const btnObject = document.createElement('button');
+btnObject.setAttribute("class", "btn");
+btnObject.textContent = 'Objets';
+// Rattacher le bouton 'Objet'
+divFilterCategory.appendChild(btnObject);
+// Ajout du listener pour trier les travaux 'Objets'
 btnObject.addEventListener('click', () => {
   const worksFilter = works.filter(function (works) {
     return works.categoryId === 1;
   })
-  // console.log(worksFilter);
+  // Effacement de l'écran et regénération de la page avec le filtrage effectué
+  document.querySelector(".gallery").innerHTML = "";
+  genererWorks(worksFilter);
 });
 
+// Création du bouton 'appartement'
+const btnApartment = document.createElement('button');
+btnApartment.setAttribute("class", "btn");
+btnApartment.textContent = 'Appartements';
+// Rattacher le bouton "Appartement"
+divFilterCategory.appendChild(btnApartment);
+// Ajout du listener pour trier les travaux 'Appartement'
 btnApartment.addEventListener('click', () => {
   const worksFilter = works.filter(function (works) {
     return works.categoryId === 2;
   })
-  // console.log(worksFilter);
+  // Effacement de l'écran et regénération de la page avec le filtrage effectué
+  document.querySelector(".gallery").innerHTML = "";
+  genererWorks(worksFilter);
 });
 
+// Création du bouton 'Hotel & Restaurants'
+const btnHotelsRestaurant = document.createElement('button');
+btnHotelsRestaurant.setAttribute("class", "btn");
+btnHotelsRestaurant.textContent = 'Hotels & restaurants';
+// Rattacher le bouton 'Hotel & Restaurants'
+divFilterCategory.appendChild(btnHotelsRestaurant);
+// Ajout du listener pour trier les travaux 'Hotel & Restaurants'
 btnHotelsRestaurant.addEventListener('click', () => {
   const worksFilter = works.filter(function (works) {
     return works.categoryId === 3;
   })
-  // console.log(worksFilter);
+  // Effacement de l'écran et regénération de la page avec le filtrage effectué
+  document.querySelector(".gallery").innerHTML = "";
+  genererWorks(worksFilter);
 });
+
+
 

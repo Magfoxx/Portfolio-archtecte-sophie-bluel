@@ -129,13 +129,28 @@ q:after {
 	content: none;
 }
 
+button {
+	background-color: transparent;
+	color: #1d6154;
+	font-family: "Syne";
+	font-weight: 700;
+	border: 1px solid #1d6154;
+	border-radius: 60px;
+	padding: 8px 10px;
+	min-width: 100px;
+	height: 37px;
+	line-height: 19.2px;
+}
+
+button:hover {
+	background-color: #1d6154;
+	color: whitesmoke;
+	transition: 0.2s;
+}
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
-}
-
-figure p {
-	display: none;
 }
 
 /** end reset css**/
@@ -223,6 +238,10 @@ li:hover {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+}
+
+#portfolio p {
+	display: none;
 }
 
 .category-menu {
