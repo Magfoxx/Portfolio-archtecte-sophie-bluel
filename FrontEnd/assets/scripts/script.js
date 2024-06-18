@@ -2,7 +2,7 @@
 // Récupération des travaux
 const reponse = await fetch("http://localhost:5678/api/works");
 const works = await reponse.json();
-// console.log(reponse);
+console.log(reponse);
 
 // fonction qui permet de récupérer les travaux depuis l'API
 function genererWorks(works) {
@@ -99,6 +99,7 @@ btnHotelsRestaurant.addEventListener('click', () => {
   document.querySelector(".gallery").innerHTML = "";
   genererWorks(worksFilter);
 });
+
 
 
 
