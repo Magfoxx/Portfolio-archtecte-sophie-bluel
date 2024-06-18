@@ -227,22 +227,24 @@ li img:hover {
 	display: flex;
 	align-items: center;
 	width: 90%;
-	margin: 130px auto;
+	margin: 100px auto;
 }
 
 #introduction figure {
 	flex: 1;
+
 }
 
 #introduction img {
 	display: block;
-	margin: auto;
-	width: 475px;
+	margin-left: 108px;
+	width: 75%;
 }
 
 #introduction article {
-	flex: 0.75;
-	margin-left: 1rem;
+	flex: 0.7;
+	margin-left: 15px;
+	margin-right: 70px;
 }
 
 #introduction h2 {
