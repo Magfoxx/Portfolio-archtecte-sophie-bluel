@@ -100,7 +100,8 @@ figcaption,
 figure,
 footer,
 header,
-hgroupmenu,
+hgroup,
+menu,
 nav,
 section {
 	display: block;
@@ -206,12 +207,11 @@ nav ul {
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
-	margin-left: 15px;
 }
 
+/* Pour redimensionner l'icone instagram */
 nav img {
 	height: 22px;
-
 }
 
 li:hover {
@@ -224,9 +224,9 @@ li img:hover {
 }
 
 #introduction {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	align-items: center;
-	width: 90%;
 	margin: 100px auto;
 }
 
@@ -238,13 +238,13 @@ li img:hover {
 #introduction img {
 	display: block;
 	margin-left: 108px;
-	width: 75%;
+	width: 80%;
 }
 
 #introduction article {
-	flex: 0.7;
-	margin-left: 15px;
-	margin-right: 70px;
+	flex: 1;
+	margin-left: 50px;
+	margin-right: 80px;
 }
 
 #introduction h2 {
@@ -252,9 +252,10 @@ li img:hover {
 }
 
 #introduction p {
+	color: #3D3D3D;
 	margin-bottom: 0.5em;
 	margin-right: 37px;
-	line-height: 1rem;
+	line-height: 1.2rem;
 }
 
 #portfolio h2 {
@@ -266,7 +267,7 @@ li img:hover {
 	display: none;
 }
 
-.category-menu {
+.categorie-menu {
 	display: flex;
 	justify-content: center;
 	margin: 50px auto;
@@ -285,6 +286,12 @@ li img:hover {
 .gallery img {
 	width: 100%;
 }
+
+.gallery figcaption {
+	color: #3D3D3D;
+	padding-top: 8px;
+}
+
 
 #contact {
 	/* Modification de la widht pour que celle ci soit équivalente à la maquette */
@@ -358,7 +365,7 @@ input[type="submit"] {
 	width: 380px;
 }
 
-#connexion label {
+#connexion p {
 	margin: 2em 0 1em 0;
 }
 
@@ -372,6 +379,7 @@ input[type="submit"] {
 
 #connexion span {
 	text-decoration: underline;
+	cursor: pointer;
 }
 
 footer {

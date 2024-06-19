@@ -1,16 +1,33 @@
 // console.log('test');
-// Récupération des travaux
-const reponse = await fetch("http://localhost:5678/api/works");
-const works = await reponse.json();
-console.log(reponse);
+async function fetchData() {
+  // Récupération des travaux depuis l'API
+  const reponseWorks = await fetch("http://localhost:5678/api/works");// reponse remplacé par reponseWorks
+  const listWorks = await reponseWorks.json();// works remlpacé par listWorks
+  console.log(reponseWorks);
+  // Récupération des catégories depuis l'API
+  const reponseCategory = await fetch("http://localhost:5678/api/categories");
+  const listCategory = await reponseCategory.json();// category remplacé par listCategory
+  console.log(reponseCategory);
+
+  genererWorks(listWorks);
+  genererFilter(listCategory, listWorks)
+  addListenerFilter(listWorks);
+}
 
 // fonction qui permet de récupérer les travaux depuis l'API
-function genererWorks(works) {
-  for (let i = 0; i < works.length; i++) {
-    const figure = works[i];
-
-    // Récupération des éléments du DOM
-    const divGallery = document.querySelector('.gallery');
+function genererWorks(listWorks) {
+  // Récupération des éléments du DOM
+  const divGallery = document.querySelector('.gallery');
+  if (!divGallery) {
+    console.error("L'élément .gallery n'existe pas sur cette page.");
+    return;
+  }
+  //Effacement de l'écran et regénération de la page  
+  divGallery.innerHTML = "";
+  // Boucle qui va permettre de lister les projets
+  for (let i = 0; i < listWorks.length; i++) {
+    const figure = listWorks[i];
+    // Création de la balise figure qui acceuillera chaque projet
     const worksElement = document.createElement('figure');
 
     // Création des balises
@@ -28,78 +45,49 @@ function genererWorks(works) {
     worksElement.appendChild(categoryIdElement);
   }
 }
-// Appel de la fonction
-genererWorks(works);
+// ----------- gestion des boutons filtres -----------  
 
-// Récupération de l"élément du DOM 
-const divFilterCategory = document.querySelector('.category-menu');
-// console.log(divFilterCategory);
+function genererFilter(listCategory, listWorks) {
 
-// Création du bouton 'Tous'
-const btnAll = document.createElement('button');
-btnAll.setAttribute("class", "btn");
-btnAll.textContent = 'Tous';
-// Rattacher le bouton 'Tous'
-divFilterCategory.appendChild(btnAll);
-// Ajout du listener pour trier 'tous' les travaux
-btnAll.addEventListener('click', () => {
-  const worksFilter = works.filter(function (works) {
-    return works.categoryId;
+  //   // Récupération de l'élément du DOM
+  const divFilterCategory = document.querySelector(".categorie-menu");
+  divFilterCategory.innerHTML = "";
+  // Création du bouton 'Tous' 
+  const buttonFilterAll = document.createElement('button');
+  buttonFilterAll.setAttribute('class', 'btn-tous');
+  buttonFilterAll.textContent = "Tous";
+  divFilterCategory.appendChild(buttonFilterAll);
+
+  // Boucle pour afficher le nom de chaques catégorie de l'API
+  for (let i = 0; i < listCategory.length; i++) {
+    // console.log(listCategory.length);
+    const buttonFilter = document.createElement('button');
+    // Récupération de l'id du bouton pour l'event Listener
+    buttonFilter.dataset.id = listCategory[i].id;
+    // console.log(buttonFilter.dataset.id) // Cela m'affiche bien mes 3 id
+    buttonFilter.setAttribute('class', 'btn-filter');
+    buttonFilter.innerText = listCategory[i].name
+    divFilterCategory.appendChild(buttonFilter);
+  }
+
+  // ----------- Ajout de l'event listener sur les boutons -----------  
+
+  // Pour le bouton 'Tous'
+  buttonFilterAll.addEventListener('click', () => {
+    genererWorks(listWorks);
   })
-  // Effacement de l'écran et regénération de la page avec le filtrage effectué
-  document.querySelector(".gallery").innerHTML = "";
-  genererWorks(worksFilter);
-});
-
-
-// Création du bouton 'Objet'
-const btnObject = document.createElement('button');
-btnObject.setAttribute("class", "btn");
-btnObject.textContent = 'Objets';
-// Rattacher le bouton 'Objet'
-divFilterCategory.appendChild(btnObject);
-// Ajout du listener pour trier les travaux 'Objets'
-btnObject.addEventListener('click', () => {
-  const worksFilter = works.filter(function (works) {
-    return works.categoryId === 1;
-  })
-  // Effacement de l'écran et regénération de la page avec le filtrage effectué
-  document.querySelector(".gallery").innerHTML = "";
-  genererWorks(worksFilter);
-});
-
-// Création du bouton 'appartement'
-const btnApartment = document.createElement('button');
-btnApartment.setAttribute("class", "btn");
-btnApartment.textContent = 'Appartements';
-// Rattacher le bouton "Appartement"
-divFilterCategory.appendChild(btnApartment);
-// Ajout du listener pour trier les travaux 'Appartement'
-btnApartment.addEventListener('click', () => {
-  const worksFilter = works.filter(function (works) {
-    return works.categoryId === 2;
-  })
-  // Effacement de l'écran et regénération de la page avec le filtrage effectué
-  document.querySelector(".gallery").innerHTML = "";
-  genererWorks(worksFilter);
-});
-
-// Création du bouton 'Hotel & Restaurants'
-const btnHotelsRestaurant = document.createElement('button');
-btnHotelsRestaurant.setAttribute("class", "btn");
-btnHotelsRestaurant.textContent = 'Hotels & restaurants';
-// Rattacher le bouton 'Hotel & Restaurants'
-divFilterCategory.appendChild(btnHotelsRestaurant);
-// Ajout du listener pour trier les travaux 'Hotel & Restaurants'
-btnHotelsRestaurant.addEventListener('click', () => {
-  const worksFilter = works.filter(function (works) {
-    return works.categoryId === 3;
-  })
-  // Effacement de l'écran et regénération de la page avec le filtrage effectué
-  document.querySelector(".gallery").innerHTML = "";
-  genererWorks(worksFilter);
-});
-
-
-
-
+}
+// fonction pour les autres boutons
+function addListenerFilter(listWorks) {
+  const listButton = document.querySelectorAll('.btn-filter');
+  for (let i = 0; i < listButton.length; i++) {
+    const currentButton = listButton[i];
+    currentButton.addEventListener('click', (event) => {
+      const categoryId = parseInt(event.target.dataset.id);
+      const listWorksFilter = listWorks.filter(work => work.categoryId === categoryId);
+      genererWorks(listWorksFilter);
+    });
+  }
+}
+// appel de la fonction fetchData() pour initialiser les travaux et les filtres
+fetchData();

@@ -11,7 +11,7 @@
     rel="stylesheet">
   <link rel="shortcut icon" href="#">
   <meta name="description" content="">
-  <script type="module" src="./assets/scripts/login.js" defer></script>
+  <script src="./assets/scripts/login.js" defer></script>
   <link rel="stylesheet" href="./assets/styles/style.css">
 </head>
 
@@ -22,7 +22,7 @@
       <ul>
         <li><a href="#">projets</a></li>
         <li><a href="#">contact</a></li>
-        <li><a href="./login.html"><b>login</b></a></li>
+        <li><a href="./login.html">login</a></li>
         <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
       </ul>
     </nav>
@@ -31,12 +31,13 @@
   <main>
     <section id="connexion">
       <h2>Log in</h2>
-      <form action="#" method="post">
-        <label for="email">email</label>
-        <input type="email">
-        <label for="text">Mot de passe</label>
-        <input type="password">
-        <input type="submit" value="Se connecter">
+      <form action="#" id="loginForm">
+        <p>Email</p>
+        <input type="email" id="email" name="email" autocomplete="email">
+        <p>Mot de passe</p>
+        <input type="password" id="password" name="password" autocomplete="current-password">
+        <input type="submit" id="submit" value="Se connecter">
+        <p id="error-message"></p>
       </form>
       <span>Mot de passe oublié</span>
 
