@@ -1,13 +1,14 @@
+
 // console.log('test');
 async function fetchData() {
   // Récupération des travaux depuis l'API
   const reponseWorks = await fetch("http://localhost:5678/api/works");// reponse remplacé par reponseWorks
   const listWorks = await reponseWorks.json();// works remlpacé par listWorks
-  console.log(reponseWorks);
+  // console.log(reponseWorks);
   // Récupération des catégories depuis l'API
   const reponseCategory = await fetch("http://localhost:5678/api/categories");
   const listCategory = await reponseCategory.json();// category remplacé par listCategory
-  console.log(reponseCategory);
+  // console.log(reponseCategory);
 
   genererWorks(listWorks);
   genererFilter(listCategory, listWorks)
