@@ -1,13 +1,29 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const mode = urlParams.get('mode');
 
-// console.log('test');
+  if (mode === 'edit') {
+    activateEditMode();
+  } else {
+    const currentPath = window.location.pathname;
+    if (!currentPath.endsWith('/index.html')) {
+      window.location.href = "./index.html";
+    }
+  }
+});
+
+function activateEditMode() {
+  // Votre code pour activer le mode édition
+}
+
 async function fetchData() {
   // Récupération des travaux depuis l'API
-  const reponseWorks = await fetch("http://localhost:5678/api/works");// reponse remplacé par reponseWorks
-  const listWorks = await reponseWorks.json();// works remlpacé par listWorks
+  const reponseWorks = await fetch("http://localhost:5678/api/works");
+  const listWorks = await reponseWorks.json();
   // console.log(reponseWorks);
   // Récupération des catégories depuis l'API
   const reponseCategory = await fetch("http://localhost:5678/api/categories");
-  const listCategory = await reponseCategory.json();// category remplacé par listCategory
+  const listCategory = await reponseCategory.json();
   // console.log(reponseCategory);
 
   genererWorks(listWorks);
@@ -90,5 +106,61 @@ function addListenerFilter(listWorks) {
     });
   }
 }
-// appel de la fonction fetchData() pour initialiser les travaux et les filtres
+
+// Fonction qui permet l'activation du mode édition
+function activateEditMode() {
+
+  // ====== Création des Eléments du bandeau ====== 
+
+  document.body.classList.add('edit-mode');
+
+  // Ajout du bandeau du mode édition
+  const editBanner = document.createElement('div');
+  editBanner.classList.add("banner");
+
+  const bannerContent = document.createElement('div');
+  bannerContent.classList.add('banner-content');
+  // Ajout de l'icon
+  const iconBanner = document.createElement('div');
+  iconBanner.classList.add("icon");
+  iconBanner.innerHTML = '<i class="far fa-pen-to-square"></i>';
+  // Ajout du texte
+  const editMode = document.createElement('p');
+  editMode.textContent = 'Mode édition';
+  // Insertion de 'editBanner' comme premier enfant du parent 'body'
+  const header = document.querySelector('header');
+  header.parentNode.insertBefore(editBanner, header);
+  // Rattacher les balises
+  editBanner.appendChild(bannerContent);
+  bannerContent.appendChild(iconBanner);
+  bannerContent.appendChild(editMode);
+
+  // Création de l'élément "modifier" à coté de Projets
+  const projectContainer = document.createElement('div');
+  projectContainer.classList.add('project-container');
+
+  const myProject = document.querySelector('#portfolio h2');
+
+  // Déplace le h2 dans le nouveau conteneur
+  myProject.parentNode.insertBefore(projectContainer, myProject);
+  projectContainer.appendChild(myProject);
+
+  // Contient l'icône et le texte
+  const editContainer = document.createElement('div');
+  editContainer.classList.add('edit-container');
+
+  const iconProject = document.createElement('span');
+  iconProject.classList.add('icon');
+  iconProject.innerHTML = '<i class="far fa-pen-to-square"></i>';
+
+  const edit = document.createElement('span');
+  edit.textContent = 'modifier';
+
+  // Rattacher les balises
+  editContainer.appendChild(iconProject);
+  editContainer.appendChild(edit);
+  projectContainer.appendChild(editContainer);
+
+}
+// Appel de la fonction fetchData() pour initialiser les travaux et les filtres
 fetchData();

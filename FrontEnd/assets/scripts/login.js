@@ -23,6 +23,7 @@ async function handleSubmit(event) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
+    console.log(response);
 
     // Le 'if (response.ok)' est utilisé pour vérifier si la réponse obtenue de la requête fetch est valide et pour gérer les différents cas en fonction du statut de la réponse.
     if (!response.ok) {
@@ -37,11 +38,10 @@ async function handleSubmit(event) {
     }
 
     const data = await response.json();
-
-    // Si la connexion est réussie, redirection !
-    window.location.href = "./index.html";
+    // Si la connexion est réussie, redirection en mode édition 
+    window.location.href = "./index.html?mode=edit";
     // affichage du login dans la console
-    console.log('Success', data);
+    console.log('Connexion réussie:', data);
   } catch (error) {
     // Affichage de l'erreur
     errorMessage.textContent = error.message;

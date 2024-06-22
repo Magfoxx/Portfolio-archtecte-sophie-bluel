@@ -258,9 +258,12 @@ li img:hover {
 	line-height: 1.2rem;
 }
 
+#portfolio {
+	padding-top: 40px;
+}
+
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
 }
 
 #portfolio p {
@@ -351,7 +354,7 @@ input[type="submit"] {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin: 110px;
+	margin: 110px auto;
 }
 
 #connexion h2 {
@@ -400,4 +403,51 @@ footer nav ul {
 	align-items: center;
 	margin: 2em;
 	cursor: pointer;
+}
+
+/* ----- Styles pour le mode édition ----- */
+body.edit-mode .edit-only {
+	display: block;
+	/* Affiche les éléments uniquement en mode édition */
+}
+
+.edit-mode button {
+	display: none;
+	/* Masque les boutons en mode edition */
+}
+
+
+
+.edit-only span {
+	display: none;
+	/* Masque les éléments en mode normal */
+}
+
+
+.banner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 59px;
+	background-color: black;
+	color: white;
+}
+
+.banner-content {
+	display: flex;
+}
+
+.icon {
+	margin-right: 15px;
+}
+
+.project-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 100px;
+}
+
+.edit-container {
+	padding-left: 30px;
 }
