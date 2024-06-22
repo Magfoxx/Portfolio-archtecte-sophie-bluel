@@ -264,16 +264,19 @@ li img:hover {
 
 #portfolio h2 {
 	text-align: center;
+	margin-bottom: 50px;
+	position: relative;
 }
 
 #portfolio p {
 	display: none;
 }
 
-.categorie-menu {
+.category-menu {
 	display: flex;
 	justify-content: center;
-	margin: 50px auto;
+	margin: 0 auto;
+	padding-bottom: 50px;
 	gap: 15px;
 }
 
@@ -406,48 +409,25 @@ footer nav ul {
 }
 
 /* ----- Styles pour le mode édition ----- */
-body.edit-mode .edit-only {
-	display: block;
-	/* Affiche les éléments uniquement en mode édition */
-}
-
-.edit-mode button {
-	display: none;
-	/* Masque les boutons en mode edition */
-}
-
-
-
-.edit-only span {
-	display: none;
-	/* Masque les éléments en mode normal */
-}
-
-
+/* Partie bannière */
 .banner {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 59px;
+	height: 60px;
 	background-color: black;
 	color: white;
-}
-
-.banner-content {
 	display: flex;
-}
-
-.icon {
-	margin-right: 15px;
-}
-
-.project-container {
-	display: flex;
-	justify-content: center;
 	align-items: center;
-	padding-left: 100px;
+	justify-content: center;
+	margin-bottom: 20px;
 }
 
-.edit-container {
-	padding-left: 30px;
+/* Partie mes projets 'modifier' */
+.modify-project {
+	color: black;
+	font-family: 'Work Sans';
+	font-size: 14px;
+	font-weight: 400;
+	padding-left: 20px;
+	position: absolute;
+	left: 670px;
+	top: 8px;
 }

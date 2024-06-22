@@ -14,7 +14,6 @@
 	<link rel="stylesheet" href="./assets/styles/style.css">
 	<script src="https://kit.fontawesome.com/d0d11bca69.js" crossorigin="anonymous"></script>
 	<script src="./assets/scripts/script.js" defer></script>
-	<!-- Ajout du kit fontawesome -->
 
 </head>
 
@@ -25,7 +24,7 @@
 			<ul>
 				<li><a href="#portfolio">projets</a></li>
 				<li><a href="#contact">contact</a></li>
-				<li><a href="./login.html">login</a></li>
+				<li><a href="./login.html" id="btn-Login">login</a></li>
 				<li><a href="https://www.instagram.com/"><img src="./assets/icons/instagram.png" alt="Instagram"></a></li>
 			</ul>
 		</nav>
@@ -47,8 +46,8 @@
 		</section>
 		<section id="portfolio">
 			<!-- dynamiquement par JavaScript -->
-			<h2>Mes Projets</h2>
-			<div class="categorie-menu">
+			<h2 id="my-project">Mes Projets</h2>
+			<div class="category-menu">
 				<!-- dynamiquement par JavaScript -->
 			</div>
 			<div class="gallery">
@@ -60,9 +59,9 @@
 			<p>Vous avez un projet ? Discutons-en !</p>
 			<form action="#" method="post">
 				<label for="name">Nom</label>
-				<input type="text" name="name" id="name">
+				<input type="text" name="name" id="name" autocomplete="name">
 				<label for="email">Email</label>
-				<input type="email" name="email" id="email">
+				<input type="email" name="email" id="email" autocomplete="email">
 				<label for="message">Message</label>
 				<textarea name="message" id="message" cols="30" rows="10"></textarea>
 				<input type="submit" value="Envoyer">
@@ -77,6 +76,7 @@
 			</ul>
 		</nav>
 	</footer>
+	<script src="./assets/scripts/script.js" defer></script>
 </body>
 
 </html>

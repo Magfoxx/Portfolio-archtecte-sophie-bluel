@@ -1,37 +1,46 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const mode = urlParams.get('mode');
 
-  if (mode === 'edit') {
-    activateEditMode();
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    //si le token est présent alors appel de la fonction qui modifie l'interface admin
+    editMode();
+    console.log('Mode edition'); // Pour verifier si je suis sur le mode 'édition'
   } else {
-    const currentPath = window.location.pathname;
-    if (!currentPath.endsWith('/index.html')) {
-      window.location.href = "./index.html";
-    }
+    // Sinon l'interface classique s'affiche
+    classicMode()
+    console.log('Mode Classique'); // Pour verifier si je suis sur le mode 'classique'
   }
+  fetchData();
+
+  const openModal = function (event) {
+    e.preventDefault();
+    const target = document.querySelector(e.target.getAttribute("href"));
+    console.log(event);
+  }
+
+
+
+
+
+
+
+
 });
 
-function activateEditMode() {
-  // Votre code pour activer le mode édition
-}
 
+// Fonction de récupération des données depuis l'API
 async function fetchData() {
-  // Récupération des travaux depuis l'API
   const reponseWorks = await fetch("http://localhost:5678/api/works");
   const listWorks = await reponseWorks.json();
-  // console.log(reponseWorks);
-  // Récupération des catégories depuis l'API
+
   const reponseCategory = await fetch("http://localhost:5678/api/categories");
   const listCategory = await reponseCategory.json();
-  // console.log(reponseCategory);
 
   genererWorks(listWorks);
   genererFilter(listCategory, listWorks)
   addListenerFilter(listWorks);
 }
-
-// fonction qui permet de récupérer les travaux depuis l'API
+// fonction qui permet de récupérer la liste des travaux depuis l'API
 function genererWorks(listWorks) {
   // Récupération des éléments du DOM
   const divGallery = document.querySelector('.gallery');
@@ -67,7 +76,7 @@ function genererWorks(listWorks) {
 function genererFilter(listCategory, listWorks) {
 
   //   // Récupération de l'élément du DOM
-  const divFilterCategory = document.querySelector(".categorie-menu");
+  const divFilterCategory = document.querySelector(".category-menu");
   divFilterCategory.innerHTML = "";
   // Création du bouton 'Tous' 
   const buttonFilterAll = document.createElement('button');
@@ -107,60 +116,77 @@ function addListenerFilter(listWorks) {
   }
 }
 
-// Fonction qui permet l'activation du mode édition
-function activateEditMode() {
+function editMode() {
+  const divFiltreCategories = document.querySelector(".category-menu");
+  if (divFiltreCategories) {
+    divFiltreCategories.style.display = "none";// La section des filtres est caché
+  }
+  // Remplacement de 'login' par 'logout'
+  const loginButton = document.getElementById("btn-Login");
+  if (loginButton) {
+    loginButton.textContent = "logout";
+    // Ajout d'un ecouteur au bouton pour retourner sur la page login quand on se deconnecte
+    loginButton.addEventListener("click", function () {
+      localStorage.removeItem("authToken"); // suppression des donnée du 'localStorage'
+      window.Location.href = "login.html"; // redirection vers login.html au click
+    })
+  }
 
-  // ====== Création des Eléments du bandeau ====== 
-
-  document.body.classList.add('edit-mode');
-
-  // Ajout du bandeau du mode édition
-  const editBanner = document.createElement('div');
+  // Vérifier si la bannière existe déjà
+  const editBanner = document.createElement("div");
   editBanner.classList.add("banner");
 
-  const bannerContent = document.createElement('div');
-  bannerContent.classList.add('banner-content');
-  // Ajout de l'icon
-  const iconBanner = document.createElement('div');
-  iconBanner.classList.add("icon");
-  iconBanner.innerHTML = '<i class="far fa-pen-to-square"></i>';
-  // Ajout du texte
-  const editMode = document.createElement('p');
-  editMode.textContent = 'Mode édition';
-  // Insertion de 'editBanner' comme premier enfant du parent 'body'
-  const header = document.querySelector('header');
-  header.parentNode.insertBefore(editBanner, header);
-  // Rattacher les balises
-  editBanner.appendChild(bannerContent);
-  bannerContent.appendChild(iconBanner);
-  bannerContent.appendChild(editMode);
+  // Vérification si la bannière existe déjà avant de la créer car je l'avais en double 
+  const existingBanner = document.querySelector(".banner");
+  if (!existingBanner) {
+    // Recherche du header
+    const header = document.querySelector("header");
+    if (header) {
+      const editIcon = document.createElement("i");
+      editIcon.classList.add("far", "fa-pen-to-square");
+      editIcon.style.marginRight = "10px";
 
-  // Création de l'élément "modifier" à coté de Projets
-  const projectContainer = document.createElement('div');
-  projectContainer.classList.add('project-container');
+      const iconText = document.createElement("span");
+      iconText.textContent = "Mode édition";
 
-  const myProject = document.querySelector('#portfolio h2');
+      editBanner.appendChild(editIcon);
+      editBanner.appendChild(iconText);
 
-  // Déplace le h2 dans le nouveau conteneur
-  myProject.parentNode.insertBefore(projectContainer, myProject);
-  projectContainer.appendChild(myProject);
+      // Insertion de la bannière avant le header
+      header.parentNode.insertBefore(editBanner, header);
+    }
+  }
 
-  // Contient l'icône et le texte
-  const editContainer = document.createElement('div');
-  editContainer.classList.add('edit-container');
+  // Icone et texte
+  const myProject = document.getElementById("my-project");
+  if (myProject && !myProject.querySelector('.modify-project')) {
+    const linkIcon = document.createElement("a");
+    linkIcon.classList.add("modify-project");
+    linkIcon.href = "#"; // reste à renseigner le lien pour la futur modale
+    const editIcon = document.createElement("i");
+    editIcon.classList.add("fa-regular", "fa-pen-to-square");
+    editIcon.style.marginRight = "10px";
+    const iconText = document.createElement("span");
+    iconText.textContent = "modifier";
 
-  const iconProject = document.createElement('span');
-  iconProject.classList.add('icon');
-  iconProject.innerHTML = '<i class="far fa-pen-to-square"></i>';
+    linkIcon.appendChild(editIcon);
+    linkIcon.appendChild(iconText);
+    myProject.appendChild(linkIcon);
 
-  const edit = document.createElement('span');
-  edit.textContent = 'modifier';
-
-  // Rattacher les balises
-  editContainer.appendChild(iconProject);
-  editContainer.appendChild(edit);
-  projectContainer.appendChild(editContainer);
-
+  }
 }
+
+function classicMode() {
+  const divFiltreCategories = document.querySelector(".filtre-categories");
+  if (divFiltreCategories) {
+    divFiltreCategories.style.display = "block";
+  }
+
+  const loginButton = document.querySelector(".login-button");
+  if (loginButton) {
+    loginButton.textContent = "Login";
+  }
+}
+
 // Appel de la fonction fetchData() pour initialiser les travaux et les filtres
 fetchData();
