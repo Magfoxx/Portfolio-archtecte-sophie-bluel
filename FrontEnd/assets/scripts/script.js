@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener("DOMContentLoaded", function () {
   const token = localStorage.getItem("authToken");
   if (token) {
     //si le token est présent alors appel de la fonction qui modifie l'interface admin
@@ -11,34 +10,23 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Mode Classique'); // Pour verifier si je suis sur le mode 'classique'
   }
   fetchData();
-
-  const openModal = function (event) {
-    e.preventDefault();
-    const target = document.querySelector(e.target.getAttribute("href"));
-    console.log(event);
-  }
-
-
-
-
-
-
-
-
 });
-
 
 // Fonction de récupération des données depuis l'API
 async function fetchData() {
-  const reponseWorks = await fetch("http://localhost:5678/api/works");
-  const listWorks = await reponseWorks.json();
+  try {
+    const reponseWorks = await fetch("http://localhost:5678/api/works");
+    const listWorks = await reponseWorks.json();
 
-  const reponseCategory = await fetch("http://localhost:5678/api/categories");
-  const listCategory = await reponseCategory.json();
+    const reponseCategory = await fetch("http://localhost:5678/api/categories");
+    const listCategory = await reponseCategory.json();
 
-  genererWorks(listWorks);
-  genererFilter(listCategory, listWorks)
-  addListenerFilter(listWorks);
+    genererWorks(listWorks);
+    genererFilter(listCategory, listWorks);
+    addListenerFilter(listWorks);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données :", error);
+  }
 }
 // fonction qui permet de récupérer la liste des travaux depuis l'API
 function genererWorks(listWorks) {
@@ -132,6 +120,8 @@ function editMode() {
     })
   }
 
+  // ----------- Mode Édition & Classique ----------- 
+
   // Vérifier si la bannière existe déjà
   const editBanner = document.createElement("div");
   editBanner.classList.add("banner");
@@ -142,42 +132,43 @@ function editMode() {
     // Recherche du header
     const header = document.querySelector("header");
     if (header) {
+      const linkIcon = document.createElement("a");
       const editIcon = document.createElement("i");
       editIcon.classList.add("far", "fa-pen-to-square");
       editIcon.style.marginRight = "10px";
-
       const iconText = document.createElement("span");
       iconText.textContent = "Mode édition";
 
       editBanner.appendChild(editIcon);
       editBanner.appendChild(iconText);
-
       // Insertion de la bannière avant le header
       header.parentNode.insertBefore(editBanner, header);
     }
   }
 
   // Icone et texte
-  const myProject = document.getElementById("my-project");
-  if (myProject && !myProject.querySelector('.modify-project')) {
+  const myProject = document.querySelector(".my-project");
+  // j'ai du rajouter cette condition car 'linkIcon' était en double
+  if (myProject && !myProject.querySelector(".js-modal")) {
     const linkIcon = document.createElement("a");
-    linkIcon.classList.add("modify-project");
-    linkIcon.href = "#"; // reste à renseigner le lien pour la futur modale
     const editIcon = document.createElement("i");
-    editIcon.classList.add("fa-regular", "fa-pen-to-square");
-    editIcon.style.marginRight = "10px";
     const iconText = document.createElement("span");
+    linkIcon.href = "#modal1";
+    linkIcon.classList.add("js-modal");
+    iconText.classList.add("modify")
+    editIcon.classList.add("fa-regular", "fa-pen-to-square", "edit-icon");
     iconText.textContent = "modifier";
 
     linkIcon.appendChild(editIcon);
     linkIcon.appendChild(iconText);
     myProject.appendChild(linkIcon);
 
+    openModal(linkIcon);
   }
 }
-
 function classicMode() {
-  const divFiltreCategories = document.querySelector(".filtre-categories");
+  const divFiltreCategories = document.querySelector(".category-menu");
+  console.log(divFiltreCategories);
   if (divFiltreCategories) {
     divFiltreCategories.style.display = "block";
   }
@@ -186,6 +177,72 @@ function classicMode() {
   if (loginButton) {
     loginButton.textContent = "Login";
   }
+}
+// ----------- Partie modale -----------  
+
+// Faire une fonction pour les différentes vue de la modale, une première lors du click sur 'modifier' et une deuxième qui lors du click sur le bouton 'Ajouter une photo'
+
+// Fonction d'ouverture de la modale
+function openModal(linkIcon) {
+  // selection du 'href'
+  const modal = document.querySelector('#modal1');
+
+  // Création du container qui contiendra la galerie
+  const modalContentContainer = document.createElement('div');
+  modalContentContainer.classList.add('modal-gallery');
+
+  // Création et ajout du bouton dans la div buttonContent
+  const buttonContent = document.createElement('div')
+  buttonContent.classList.add('btnModalContainer');
+
+  // Création du bouton 
+  const addPicture = document.createElement('button');
+  addPicture.textContent = 'Ajouter une photo';
+  addPicture.classList.add('buttonModal');
+
+  buttonContent.appendChild(addPicture);
+
+  modal.querySelector('.modal-content').appendChild(modalContentContainer);
+  modal.querySelector('.modal-content').appendChild(buttonContent);
+
+  // Ajout d'un 'eventListener' au click
+  linkIcon.addEventListener('click', function (e) {
+    e.preventDefault();
+    // Clonage de la galerie des travaux
+    const divGallery = document.querySelector('.gallery')
+    if (divGallery) {
+      const galleryClone = divGallery.cloneNode(true);
+
+      // Ajout de l'icone remove sur chaques figure clonée
+      const figures = galleryClone.querySelectorAll('figure');
+      figures.forEach(figure => {
+        const deleteIcon = document.createElement('i');
+        deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon', 'deletIcon');
+        figure.appendChild(deleteIcon);
+      });
+
+      modalContentContainer.innerHTML = '';
+      modalContentContainer.appendChild(galleryClone);
+    }
+    modal.style.display = null;
+    modal.removeAttribute('aria-hidden');
+    modal.setAttribute('aria-modal', 'true');
+  });
+  // Fermeture de la modale avec le bouton 'close'
+  modal.querySelector('.modal-close').addEventListener('click', function () {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.removeAttribute('aria-modal');
+  });
+
+  // Fermeture de la modale au click en dehors de celle-ci
+  window.addEventListener('click', function (event) {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+      modal.removeAttribute('aria-modal');
+    }
+  });
 }
 
 // Appel de la fonction fetchData() pour initialiser les travaux et les filtres

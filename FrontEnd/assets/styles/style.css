@@ -107,6 +107,10 @@ section {
 	display: block;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 body {
 	line-height: 1;
 	background-color: #FFFEF8;
@@ -144,6 +148,7 @@ button {
 	border-radius: 60px;
 	padding: 8px 10px;
 	min-width: 100px;
+	margin-right: 15px;
 }
 
 button:hover {
@@ -263,9 +268,7 @@ li img:hover {
 }
 
 #portfolio h2 {
-	text-align: center;
-	margin-bottom: 50px;
-	position: relative;
+	margin: auto;
 }
 
 #portfolio p {
@@ -273,11 +276,9 @@ li img:hover {
 }
 
 .category-menu {
-	display: flex;
-	justify-content: center;
+	text-align: center;
 	margin: 0 auto;
 	padding-bottom: 50px;
-	gap: 15px;
 }
 
 .gallery {
@@ -286,7 +287,7 @@ li img:hover {
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
-	margin: 0 auto;
+	margin: 50px auto 0;
 }
 
 .gallery img {
@@ -307,10 +308,6 @@ li img:hover {
 
 #contact>* {
 	text-align: center;
-}
-
-#contact h2 {
-	margin-bottom: 20px;
 }
 
 #contact form {
@@ -421,13 +418,129 @@ footer nav ul {
 }
 
 /* Partie mes projets 'modifier' */
-.modify-project {
+.my-project {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+}
+
+.js-modal {
 	color: black;
 	font-family: 'Work Sans';
 	font-size: 14px;
 	font-weight: 400;
-	padding-left: 20px;
+}
+
+.js-modal i {
+	margin-right: 15px;
+}
+
+/* Partie modale */
+
+.modal {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+	margin: 0 auto;
+	height: 688px;
+	width: 630px;
+	background-color: #FFF;
+	border-radius: 10px;
+	padding: 20px;
+
+}
+
+.modal-close {
+	display: flex;
+	justify-content: end;
+	color: black;
+	border: none;
+	font-size: 22px;
+	width: 100%;
+	min-width: 10px;
+	padding-right: 20px;
+	cursor: pointer;
+}
+
+.modal-close:hover {
+	background: none;
+	color: inherit;
+	transition: none
+}
+
+.modal-content h2 {
+	color: black;
+	text-align: center;
+	font-family: 'Work Sans';
+	font-size: 26px;
+	font-weight: 400;
+	padding-bottom: 40px;
+}
+
+.btnModal {
+	margin: 0 auto;
+
+}
+
+.modal-gallery .gallery {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 0px;
+	grid-row-gap: 25px;
+	margin: 0 auto;
+	padding: 25px;
+	position: relative;
+}
+
+.modal-gallery .gallery figure {
+	position: relative;
+	width: 75px;
+}
+
+.modal-gallery .gallery figcaption {
+	display: none;
+}
+
+.modal-gallery .gallery::before {
+	content: '';
 	position: absolute;
-	left: 670px;
-	top: 8px;
+	background-color: #B3B3B3;
+	height: 1px;
+	width: 100%;
+	top: 450px;
+	left: 0;
+}
+
+.btnModalContainer {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin: 80px auto;
+}
+
+.buttonModal {
+	width: 237px;
+}
+
+.modal-gallery .gallery i {
+	position: absolute;
+	background-color: black;
+	color: white;
+	font-size: 11px;
+	height: 17px;
+	left: 55px;
+	top: 5px;
+	padding: 3px;
+	cursor: pointer;
 }
