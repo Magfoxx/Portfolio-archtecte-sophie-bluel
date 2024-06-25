@@ -531,6 +531,8 @@ footer nav ul {
 
 .buttonModal {
 	width: 237px;
+	background-color: #1d6154;
+	color: white;
 }
 
 .modal-gallery .gallery i {

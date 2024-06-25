@@ -1,31 +1,40 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    //si le token est présent alors appel de la fonction qui modifie l'interface admin
-    editMode();
-    console.log('Mode edition'); // Pour verifier si je suis sur le mode 'édition'
-  } else {
-    // Sinon l'interface classique s'affiche
-    classicMode()
-    console.log('Mode Classique'); // Pour verifier si je suis sur le mode 'classique'
-  }
-  fetchData();
-});
+
+token = localStorage.getItem("authToken");
+if (token) {
+  //si le token est présent alors appel de la fonction qui modifie l'interface admin
+  editMode();
+  console.log('Mode edition'); // Pour verifier si je suis sur le mode 'édition'
+} else {
+  // Sinon l'interface classique s'affiche
+  classicMode()
+  console.log('Mode Classique'); // Pour verifier si je suis sur le mode 'classique'
+}
+fetchData();
+
 
 // Fonction de récupération des données depuis l'API
 async function fetchData() {
-  try {
+  try { // Récupération des travaux
     const reponseWorks = await fetch("http://localhost:5678/api/works");
+    if (!reponseWorks.ok) {
+      throw new Error('Erreur lors de la récupération des travaux.');
+    }
     const listWorks = await reponseWorks.json();
 
+    //Récupération des catégories
     const reponseCategory = await fetch("http://localhost:5678/api/categories");
+    if (!reponseCategory.ok) {
+      throw new Error('Erreur lors de la récupération des catégories.');
+    }
     const listCategory = await reponseCategory.json();
 
+    //Génération des travaux et des filtres
     genererWorks(listWorks);
     genererFilter(listCategory, listWorks);
     addListenerFilter(listWorks);
   } catch (error) {
-    console.error("Erreur lors de la récupération des données :", error);
+    alert(error.message);
+    console.error("Erreur lors de la récupération des données :");
   }
 }
 // fonction qui permet de récupérer la liste des travaux depuis l'API
@@ -128,28 +137,25 @@ function editMode() {
 
   // Vérification si la bannière existe déjà avant de la créer car je l'avais en double 
   const existingBanner = document.querySelector(".banner");
-  if (!existingBanner) {
-    // Recherche du header
-    const header = document.querySelector("header");
-    if (header) {
-      const linkIcon = document.createElement("a");
-      const editIcon = document.createElement("i");
-      editIcon.classList.add("far", "fa-pen-to-square");
-      editIcon.style.marginRight = "10px";
-      const iconText = document.createElement("span");
-      iconText.textContent = "Mode édition";
+  // Recherche du header
+  const header = document.querySelector("header");
+  if (header) {
+    const editIcon = document.createElement("i");
+    editIcon.classList.add("far", "fa-pen-to-square");
+    editIcon.style.marginRight = "10px";
+    const iconText = document.createElement("span");
+    iconText.textContent = "Mode édition";
 
-      editBanner.appendChild(editIcon);
-      editBanner.appendChild(iconText);
-      // Insertion de la bannière avant le header
-      header.parentNode.insertBefore(editBanner, header);
-    }
+    editBanner.appendChild(editIcon);
+    editBanner.appendChild(iconText);
+    // Insertion de la bannière avant le header
+    header.parentNode.insertBefore(editBanner, header);
   }
 
   // Icone et texte
   const myProject = document.querySelector(".my-project");
   // j'ai du rajouter cette condition car 'linkIcon' était en double
-  if (myProject && !myProject.querySelector(".js-modal")) {
+  if (!myProject.querySelector(".js-modal")) {
     const linkIcon = document.createElement("a");
     const editIcon = document.createElement("i");
     const iconText = document.createElement("span");
@@ -178,9 +184,9 @@ function classicMode() {
     loginButton.textContent = "Login";
   }
 }
-// ----------- Partie modale -----------  
+// ----------------------------- Partie modale -------------------------  
 
-// Faire une fonction pour les différentes vue de la modale, une première lors du click sur 'modifier' et une deuxième qui lors du click sur le bouton 'Ajouter une photo'
+// Reste à faire une fonction pour les différentes vue de la modale, une première lors du click sur 'modifier' et une deuxième qui lors du click sur le bouton 'Ajouter une photo'
 
 // Fonction d'ouverture de la modale
 function openModal(linkIcon) {
@@ -199,6 +205,7 @@ function openModal(linkIcon) {
   const addPicture = document.createElement('button');
   addPicture.textContent = 'Ajouter une photo';
   addPicture.classList.add('buttonModal');
+  // Reste à ajouter un évenement au click qui renverra vers la seconde vue de la modale
 
   buttonContent.appendChild(addPicture);
 
@@ -224,6 +231,9 @@ function openModal(linkIcon) {
       modalContentContainer.innerHTML = '';
       modalContentContainer.appendChild(galleryClone);
     }
+
+    // Reste à ajouter une condition pour la suppression des travaux lorsque l'on clique sur le bouton remove
+
     modal.style.display = null;
     modal.removeAttribute('aria-hidden');
     modal.setAttribute('aria-modal', 'true');
@@ -244,6 +254,3 @@ function openModal(linkIcon) {
     }
   });
 }
-
-// Appel de la fonction fetchData() pour initialiser les travaux et les filtres
-fetchData();
