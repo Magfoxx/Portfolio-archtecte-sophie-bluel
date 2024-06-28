@@ -139,7 +139,7 @@ q:after {
 	content: none;
 }
 
-button {
+.button {
 	background-color: transparent;
 	color: #1d6154;
 	font-family: "Syne";
@@ -151,7 +151,7 @@ button {
 	margin-right: 15px;
 }
 
-button:hover {
+.button:hover {
 	background-color: #1d6154;
 	color: white;
 	transition: 0.2s;
@@ -268,7 +268,7 @@ li img:hover {
 }
 
 #portfolio h2 {
-	margin: auto;
+	margin: 0 auto;
 }
 
 #portfolio p {
@@ -451,91 +451,120 @@ footer nav ul {
 	background: rgba(0, 0, 0, 0.7);
 }
 
-.modal-content {
-	margin: 0 auto;
-	height: 688px;
+.modal-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	overflow: auto;
 	width: 630px;
-	background-color: #FFF;
-	border-radius: 10px;
+	height: 680px;
+	max-width: calc(100vw - 20px);
 	padding: 20px;
-
+	max-height: calc(100vh - 20px);
+	background-color: #fff;
+	border-radius: 10px;
 }
 
-.modal-close {
+.modal-wrapper::before {
+	content: '';
+	position: absolute;
+	top: 560px;
+	left: 104px;
+	border: 1px solid #B3B3B3;
+	width: 420px;
+}
+
+.button-modal {
 	display: flex;
 	justify-content: end;
+	width: 100%;
+}
+
+.js-modal-close {
+	display: flex;
+	justify-content: end;
+	background: none;
 	color: black;
 	border: none;
 	font-size: 22px;
-	width: 100%;
-	min-width: 10px;
-	padding-right: 20px;
+	padding: 0;
+
+}
+
+.js-modal-back {
+	display: flex;
+	justify-content: start;
+	background: none;
+	color: black;
+	border: none;
+	font-size: 22px;
+	padding: 0;
+}
+
+.js-modal-close,
+.js-modal-back i {
 	cursor: pointer;
 }
 
-.modal-close:hover {
-	background: none;
-	color: inherit;
-	transition: none
-}
-
-.modal-content h2 {
+.modal h2 {
+	margin: 0;
 	color: black;
-	text-align: center;
-	font-family: 'Work Sans';
-	font-size: 26px;
+	font-family: "Work Sans";
 	font-weight: 400;
-	padding-bottom: 40px;
 }
 
-.btnModal {
+
+
+.btn-modal {
+	display: flex;
+	align-items: flex-end;
+	height: 100%;
+	padding: 20px;
+	width: 420px;
+	position: relative;
+}
+
+.btn-modal button {
+
 	margin: 0 auto;
-
+	width: 237px;
+	height: 36px;
+	border: none;
+	border-radius: 25px;
+	background-color: #1d6154;
+	color: white;
+	font-family: "Syne";
 }
 
-.modal-gallery .gallery {
+.modal-content {
+	width: 420px;
+	margin: 30px 0;
+}
+
+.modal-content .gallery {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	grid-column-gap: 0px;
-	grid-row-gap: 25px;
+	justify-content: center;
+	align-items: center;
+	grid-column-gap: 9px;
+	grid-row-gap: 30px;
+	max-width: 420px;
 	margin: 0 auto;
-	padding: 25px;
-	position: relative;
+
+
 }
 
-.modal-gallery .gallery figure {
+.modal-content figure {
 	position: relative;
-	width: 75px;
+	width: 76.86px;
 }
 
-.modal-gallery .gallery figcaption {
+.modal-content figcaption {
 	display: none;
 }
 
-.modal-gallery .gallery::before {
-	content: '';
-	position: absolute;
-	background-color: #B3B3B3;
-	height: 1px;
-	width: 100%;
-	top: 450px;
-	left: 0;
-}
-
-.btnModalContainer {
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	margin: 80px auto;
-}
-
-.buttonModal {
-	width: 237px;
-	background-color: #1d6154;
-	color: white;
-}
-
-.modal-gallery .gallery i {
+.modal-content i {
 	position: absolute;
 	background-color: black;
 	color: white;
