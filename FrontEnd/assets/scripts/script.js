@@ -204,28 +204,31 @@ function addListenerFilter(listWorks) {
 // =============================================================================
 // ----------------------------- Partie modale -------------------------  
 // =============================================================================
-// Reste à faire une fonction pour les différentes vue de la modale, une première lors du click sur 'modifier' et une deuxième qui lors du click sur le bouton 'Ajouter une photo'
-
-// Fonction principale pour ouvrir la modale
 function openModal(linkIcon) {
   const modal = document.querySelector('#modal');
   const modalWrapper = modal.querySelector('.modal-wrapper');
-  const modalContent = document.querySelector('.modal-content');
-  const btnButtonModal = document.querySelector('.btn-modal');
+  const modalContent = modal.querySelector('.modal-content');
+  const modalTitle = document.getElementById('titlemodal');
   const divGallery = document.querySelector('.gallery');
+  const addPictureBtn = document.querySelector('.js-ajout-photo');
+  const modalFooter = document.querySelector('.modal-footer');
+  const modalForm = document.querySelector('.modal2');
+  const backButton = document.querySelector('.js-modal-back');
+  const closeButton = modal.querySelector('.js-modal-close');
+  const fileInput = modalForm.querySelector('#fileInput');
 
-  // Ajouter le contenu à la modale
-  modalWrapper.appendChild(modalContent);
-  modalWrapper.appendChild(btnButtonModal);
 
-  // Gestion de l'affichage de la modale
-  linkIcon.addEventListener('click', function (e) {
-    e.preventDefault();
-
-    // Nettoyage du contenu de modalContent avant d'ajouter la galerie
+  function resetModal() {
     modalContent.innerHTML = '';
+    modalForm.style.display = 'none';
+    modalContent.style.display = 'block';
+    modalTitle.textContent = 'Galerie photo';
+    modalFooter.style.display = 'block';
+    addPictureBtn.style.display = 'block';
+    backButton.style.display = 'none';
+  }
 
-    // Clonage de la galerie des travaux uniquement si elle existe sur la page principale
+  function addDeleteIconsToGallery() {
     if (divGallery) {
       const galleryClone = divGallery.cloneNode(true);
       const figures = galleryClone.querySelectorAll('figure');
@@ -233,37 +236,108 @@ function openModal(linkIcon) {
         const deleteIcon = document.createElement('i');
         deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon');
         figure.appendChild(deleteIcon);
+
+        deleteIcon.addEventListener('click', async () => {
+          const confirmation = confirm("Voulez-vous vraiment supprimer ce travail ?");
+          if (confirmation) {
+            try {
+              const token = localStorage.getItem("authToken");
+              if (!token) {
+                console.error('Token non trouvé.');
+                return;
+              }
+
+              const response = await fetch(`http://localhost:5678/api/works/1`, {
+                method: "DELETE",
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+              });
+
+              if (response.ok) {
+                figure.remove();
+                console.log('Suppression réussie !');
+              } else {
+                console.error('Erreur lors de la suppression du travail.');
+              }
+            } catch (error) {
+              console.error('Erreur lors de la suppression du travail :', error);
+            }
+          }
+        });
       });
 
-      // Ajouter le clone de la galerie à la modalContent
       modalContent.appendChild(galleryClone);
     }
+  }
 
-    // Afficher la modale
-    modal.style.display = null;
+  linkIcon.addEventListener('click', function (e) {
+    e.preventDefault();
+    resetModal();
+    addDeleteIconsToGallery();
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
     modal.removeAttribute('aria-hidden');
     modal.setAttribute('aria-modal', 'true');
   });
 
-  // Fermeture de la modale avec le bouton 'close'
-  modal.querySelector('.js-modal-close').addEventListener('click', function () {
-    // Nettoyage du contenu de modalContent
-    modalContent.innerHTML = '';
+  addPictureBtn.addEventListener('click', function () {
+    modalContent.style.display = 'none';
+    modalTitle.textContent = 'Ajout photo';
+    addPictureBtn.style.display = 'none';
+    modalForm.style.display = 'block';
+    backButton.style.display = 'block';
+    modalFooter.style.display = 'none';
+    modalWrapper.appendChild(modalForm);
+  });
 
+  backButton.addEventListener('click', function () {
+    modalContent.style.display = 'block';
+    modalTitle.textContent = 'Galerie photo';
+    modalFooter.style.display = 'block';
+    addPictureBtn.style.display = 'block';
+    modalForm.style.display = 'none';
+    backButton.style.display = 'none';
+  });
+
+  closeButton.addEventListener('click', function () {
+    resetModal();
     modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
     modal.setAttribute('aria-hidden', 'true');
     modal.removeAttribute('aria-modal');
   });
 
-  // Fermeture de la modale au click en dehors de celle-ci
   window.addEventListener('click', function (event) {
     if (event.target === modal) {
-      // Nettoyage du contenu de modalContent
-      modalContent.innerHTML = '';
-
+      resetModal();
       modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
       modal.setAttribute('aria-hidden', 'true');
       modal.removeAttribute('aria-modal');
+    }
+  });
+
+  const btnAddPhoto = modalForm.querySelector('.btn-ajout-fichier');
+  btnAddPhoto.addEventListener('click', function () {
+    const fileInput = modalForm.querySelector('#fileInput');
+    fileInput.click();
+  });
+
+  const pictureContainer = document.querySelector('.photo-container');
+  fileInput.addEventListener('change', function () {
+    const selectedImage = document.querySelector('#selectedImage');
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        pictureContainer.innerHTML = '';
+        pictureContainer.appendChild(selectedImage);
+        selectedImage.src = reader.result;
+        selectedImage.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
     }
   });
 }
