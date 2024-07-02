@@ -454,11 +454,12 @@ footer nav ul {
 .modal-wrapper {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
 	align-items: center;
 	position: relative;
 	overflow: auto;
 	width: 630px;
-	height: 680px;
+	height: 688px;
 	max-width: calc(100vw - 20px);
 	padding: 20px;
 	max-height: calc(100vh - 20px);
@@ -535,51 +536,52 @@ footer nav ul {
 	font-family: "Syne";
 }
 
-.modal-content {
-	flex-grow: 1;
-	width: 420px;
-	margin: 30px 0;
-}
+/* Ajoutez ce code CSS à votre fichier style.css */
 
-.modal-content .gallery {
+
+.galleryPhotoModal {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-columns: repeat(5, 1fr);
 	justify-content: center;
 	align-items: center;
-	grid-column-gap: 9px;
+	margin-top: 40px;
 	grid-row-gap: 30px;
-	max-width: 420px;
-	margin: 0 auto;
+	grid-column-gap: 8px;
 }
 
-.modal-content figure {
+.modal-figure {
 	position: relative;
-	width: 76.86px;
 }
 
-.modal-content figcaption {
+.modal-figure img {
+	width: 80px;
+	height: 103px;
+	/* Ajustez la taille des figures selon vos besoins */
+}
+
+.modal-figure figcaption {
 	display: none;
 }
 
-.modal-content i {
+.modal-figure i {
+	cursor: pointer;
 	position: absolute;
+	top: 3px;
+	left: 60px;
+	width: 17px;
+	height: 17px;
 	background-color: black;
 	color: white;
-	font-size: 11px;
-	height: 17px;
-	left: 55px;
-	top: 5px;
-	padding: 3px;
-	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.modal-footer {
-	display: flex;
-	justify-content: end;
-	margin-bottom: 30px;
-}
 
 .js-ajout-photo {
+	align-items: end;
+	margin-top: auto;
+	margin-bottom: 20px;
 	width: 237px;
 	height: 36px;
 	color: white;
@@ -590,79 +592,3 @@ footer nav ul {
 }
 
 /* Vue modale 2 */
-
-.modal2 {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.photo-container {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 420px;
-	height: 169px;
-	background-color: #E8F1F6;
-	margin: 30px;
-}
-
-.photo-container i {
-	font-size: 69px;
-	color: #B9C5CC;
-	margin: auto;
-}
-
-.photo-container button {
-	cursor: pointer;
-	color: #306685;
-	font-family: 'Work Sans';
-	font-weight: 500;
-	border: none;
-	border-radius: 25px;
-	background-color: #CBD6DC;
-	width: 173px;
-	height: 36px;
-}
-
-.photo-container span {
-	font-size: 10px;
-	margin: auto;
-}
-
-.ajout {
-	display: flex;
-	flex-direction: column;
-	margin: auto;
-	width: 420px;
-}
-
-.ajout label {
-	margin-bottom: 15px;
-}
-
-.ajout input,
-select {
-	height: 51px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	outline: none;
-	margin-bottom: 35px;
-}
-
-form .valider-photo {
-	display: flex;
-	width: 237px;
-	height: 36px;
-	background-color: #A7A7A7;
-	color: white;
-	border: none;
-	margin-top: 60px;
-}
-
-#selectedImage {
-	height: 169px;
-	width: 129px;
-}
