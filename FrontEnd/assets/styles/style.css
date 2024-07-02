@@ -476,7 +476,7 @@ footer nav ul {
 	width: 420px;
 }
 
-.button-modal {
+.modal-header {
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
@@ -491,11 +491,9 @@ footer nav ul {
 	font-size: 22px;
 	padding: 0;
 	width: 100%;
-
 }
 
 .js-modal-back {
-
 	background: none;
 	color: black;
 	border: none;
@@ -503,7 +501,7 @@ footer nav ul {
 	padding: 0;
 }
 
-.js-modal-close,
+.js-modal-close i,
 .js-modal-back i {
 	cursor: pointer;
 }
@@ -539,7 +537,7 @@ footer nav ul {
 /* Ajoutez ce code CSS à votre fichier style.css */
 
 
-.galleryPhotoModal {
+.galleryModal {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
 	justify-content: center;
@@ -592,3 +590,69 @@ footer nav ul {
 }
 
 /* Vue modale 2 */
+
+
+.photo-container {
+	width: 420px;
+	height: 169px;
+	background-color: #E8F1F6;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 40px;
+}
+
+.photo-container i {
+	color: #B9C5CC;
+	font-size: 69px;
+	margin: auto;
+}
+
+.photo-container button {
+	width: 173px;
+	height: 36px;
+	border: none;
+	border-radius: 25px;
+	color: #306685;
+	background-color: #CBD6DC;
+	position: relative;
+}
+
+form input[type="file"] {
+	position: absolute;
+	font-size: 20px;
+	left: 5px;
+	top: 5px;
+	opacity: 0;
+}
+
+.photo-container span {
+	font-size: 10px;
+	margin: auto;
+}
+
+.ajout {
+	padding-top: 30px;
+}
+
+.ajout input,
+select {
+	height: 51px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	outline: none;
+	width: 100%;
+	margin-top: 15px;
+}
+
+form input[type="submit"] {
+	margin-top: 100px;
+	margin-bottom: 30px;
+	width: 237px;
+	height: 36px;
+	display: flex;
+	border: none;
+	background-color: #A7A7A7;
+}

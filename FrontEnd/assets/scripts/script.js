@@ -75,7 +75,7 @@ function editMode() {
     const linkIcon = document.createElement("a");
     const editIcon = document.createElement("i");
     const iconText = document.createElement("span");
-    linkIcon.href = "#modal1";
+    linkIcon.href = "#modal";
     linkIcon.classList.add("js-modal");
     iconText.classList.add("modify")
     editIcon.classList.add("fa-regular", "fa-pen-to-square", "edit-icon");
@@ -176,108 +176,211 @@ function addListenerFilter(listWorks) {
 //=============================================================================
 // ----------------------------- Partie modale -------------------------  
 // =============================================================================
+// Sélectionne le bouton qui ouvre la modal au clic sur ".modify"
+const modifyButton = document.querySelector(".modify");
+if (modifyButton) {
+  modifyButton.addEventListener("click", openModal);
+}
+
 // Fonction pour ouvrir la modale
 function openModal() {
-  const modal = document.querySelector("#modal1");
+  const modal = document.querySelector("#modal");
+  const modal2 = modal.querySelector('.modal2');
+
   if (modal) {
     modal.style.display = null;
+    modal2.style.display = 'none';
   }
 
-  // Fermer la modale quand on clique sur le bouton de fermeture
-  const closeButton = modal.querySelector(".js-modal-close");
-  if (closeButton) {
-    closeButton.addEventListener("click", function () {
-      modal.style.display = "none";
-    });
-  }
-
-  // Fermer la modale quand on clique en dehors de la modale
-  window.addEventListener("click", function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  });
-
-  // Charger les données et générer la galerie modale
-  GalleryModal();
+  modalClose(modal); // Appelle la fonction pour fermer la modal en cliquant à l'extérieur
+  Modal1(); // Appelle la fonction pour dupliquer la galerie dans la modal
 }
 
 // Fonction pour dupliquer la galerie dans la modale
-async function GalleryModal() {
-  const modalGallery = document.querySelector(".galleryPhotoModal");
+function Modal1() {
+  const mainGallery = document.querySelector(".gallery");
+  const modalGallery = document.querySelector(".galleryModal");
 
-  try {
-    const response = await fetch('http://localhost:5678/api/works');
-    if (!response.ok) {
-      throw new Error('Erreur lors du chargement des travaux depuis l\'API');
-    }
-    const data = await response.json();
+  if (mainGallery && modalGallery) {
+    modalGallery.innerHTML = mainGallery.innerHTML; // Copie le contenu de la galerie principale dans la galerie de la modal
 
-    modalGallery.innerHTML = ''; // Efface le contenu existant
+    const figuresInModal = modalGallery.querySelectorAll('figure');
+    figuresInModal.forEach(figure => {
+      figure.classList.add('modal-figure'); // Ajoute une classe aux figures dans la modal
 
-    data.forEach(work => {
-      const figure = document.createElement('figure');
-      figure.dataset.id = work.id; // Ajoute l'ID à l'attribut data-id
+      const figcaption = figure.querySelector('figcaption');
+      if (figcaption) {
+        figcaption.style.display = 'none';
+      }
 
-      const img = document.createElement('img');
-      img.src = work.imageUrl;
-      img.alt = work.title;
-
-      const figcaption = document.createElement('figcaption');
-      figcaption.textContent = work.title;
-
-      figure.appendChild(img);
-      figure.appendChild(figcaption);
-
+      // Ajoute une icône de suppression à chaque figure dans la modal
       const deleteIcon = document.createElement('i');
       deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon');
       deleteIcon.addEventListener('click', async () => {
         const confirmation = confirm("Voulez-vous vraiment supprimer ce travail ?");
         if (confirmation) {
-          try {
-            const token = localStorage.getItem("authToken");
-            if (!token) {
-              console.error('Token non trouvé.');
-              return;
-            }
+          const figureId = figure.dataset.id;
+          if (figureId) {
+            try {
+              const token = localStorage.getItem("authToken");
+              if (!token) {
+                console.error('Token non trouvé.');
+                return;
+              }
 
-            const response = await fetch(`http://localhost:5678/api/works/${work.id}`, {
-              method: "DELETE",
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-            });
+              // Envoie une requête DELETE pour supprimer le travail
+              const response = await fetch(`http://localhost:5678/api/works/${figureId}`, {
+                method: "DELETE",
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+              });
 
-            if (response.ok) {
-              figure.remove();
-              console.log('Suppression réussie !');
-            } else {
-              console.error('Erreur lors de la suppression du travail.');
+              if (response.ok) {
+                figure.remove(); // Supprime la figure de la modal si la suppression réussit
+                console.log('Suppression réussie !');
+              } else {
+                console.error('Erreur lors de la suppression du travail.');
+              }
+            } catch (error) {
+              console.error('Erreur lors de la suppression du travail :', error);
             }
-          } catch (error) {
-            console.error('Erreur lors de la suppression du travail :', error);
+          } else {
+            console.error("ID de la photo non défini");
           }
         }
       });
-
-      figure.appendChild(deleteIcon);
-      figure.classList.add('modal-figure');
-      modalGallery.appendChild(figure);
+      figure.appendChild(deleteIcon); // Ajoute l'icône de suppression à la figure
     });
-
-  } catch (error) {
-    console.error('Erreur lors du chargement des travaux :', error);
   }
 
-  fetchData();
+  const addPhotoButton = document.querySelector('.js-ajout-photo');
+  if (addPhotoButton) {
+    addPhotoButton.addEventListener('click', function () {
+      modal2();
+    });
+  }
+
+  fetchData(); // Appelle la fonction pour récupérer les données après la modification
 }
 
-// Ouverture de la modal au click sur le span .modify
-const modifyButton = document.querySelector(".modify");
+// Fonction pour afficher modal2 et masquer modal1
+function modal2() {
+  const modal = document.querySelector("#modal");
+  const modal1 = modal.querySelector('.modal1');
+  const modal2 = modal.querySelector('.modal2');
+  const backButton = document.querySelector('.js-modal-back');
+  const titleModal = document.querySelector('#titlemodal');
+  const fileInput = document.querySelector('.file-input');
+  const pictureContainer = document.querySelector('.photo-container');
 
-if (modifyButton) {
-  modifyButton.addEventListener("click", function () {
-    openModal();
+  const addPhotoButton = document.querySelector('.js-ajout-photo');
+
+  if (modal1 && modal2 && titleModal && addPhotoButton)
+    modal1.style.display = "none";
+  modal2.style.display = "block";
+  backButton.style.display = "block";
+  addPhotoButton.style.display = "none";
+  titleModal.textContent = "Ajout photo";
+
+
+  backButton.addEventListener('click', function () {
+    resetModal(); // Appelle la fonction pour réinitialiser la modal
   });
+
+  fileInput.addEventListener('change', function () {
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        pictureContainer.innerHTML = ''; // Efface le contenu précédent du conteneur de photos pour afficher l'image selectionné
+        const imgElement = document.createElement('img');
+        imgElement.src = reader.result; // Charge l'image sélectionnée
+        imgElement.style.maxWidth = '129px';
+        imgElement.style.maxHeight = '169px';
+
+        pictureContainer.appendChild(imgElement); // Affiche l'image dans le conteneur
+      };
+      reader.readAsDataURL(file); // Lit le fichier en tant qu'URL de données
+    }
+  });
+
+  const submitButton = document.querySelector('.valider-photo'); // Sélectionne le bouton de validation
+  if (submitButton) {
+    submitButton.addEventListener('click', async function (event) {
+      event.preventDefault();
+
+      const form = document.getElementById('photoForm');
+      const formData = new FormData(form);
+
+      try {
+        const token = localStorage.getItem("authToken"); // Récupère le token JWT depuis localStorage
+        if (!token) {
+          console.error('Token non trouvé.'); // Affiche une erreur si le token n'est pas trouvé
+          return;
+        }
+
+        // Envoie une requête POST pour ajouter un travail avec le token JWT dans les headers
+        const response = await fetch("http://localhost:5678/api/works", {
+          method: "POST",
+          headers: {
+            'Authorization': `Bearer ${token}` // Ajoute le token JWT dans les headers
+          },
+          body: formData // Ajoute les données du formulaire dans le corps de la requête
+        });
+
+        if (response.ok) {
+          console.log('Travail envoyé avec succès !'); // Affiche un message de succès si l'envoi réussit
+          closeModal(); // Appelle la fonction pour fermer la modal
+          fetchData(); // Appelle la fonction pour rafraîchir les données
+        } else {
+          console.error('Erreur lors de l\'envoi des travaux :', response.statusText); // Affiche l'erreur si l'envoi échoue
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'envoi des travaux :', error); // Affiche l'erreur si l'envoi échoue
+      }
+    });
+  }
+}
+
+// Fonction pour fermer la modale après l'envoi des travaux
+function closeModal() {
+  const modal = document.querySelector("#modal");
+  modal.style.display = "none";
+  resetModal(); // Appelle la fonction pour réinitialiser la modal
+}
+
+// Fonction pour fermer la modale
+function modalClose(modal) {
+  const closeButton = modal.querySelector(".js-modal-close");
+  if (closeButton) {
+    closeButton.addEventListener("click", function () {
+      modal.style.display = "none";
+      resetModal(); // Appelle la fonction pour réinitialiser la modal
+    });
+  }
+
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+      resetModal(); // Appelle la fonction pour réinitialiser la modal
+    }
+  });
+}
+
+// Fonction qui réinitialise la modal après une fermeture
+function resetModal() {
+  const modal = document.querySelector("#modal");
+  const modal1 = modal.querySelector('.modal1');
+  const modal2 = modal.querySelector('.modal2');
+  const backButton = document.querySelector('.js-modal-back');
+  const titleModal = document.querySelector('#titlemodal');
+  const addPhotoButton = document.querySelector('.js-ajout-photo');
+
+  modal1.style.display = 'grid';
+  modal2.style.display = 'none';
+  titleModal.textContent = 'Galerie photo';
+  addPhotoButton.style.display = 'block';
+  backButton.style.display = 'none';
 }
