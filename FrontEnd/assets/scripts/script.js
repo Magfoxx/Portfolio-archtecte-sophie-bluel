@@ -121,6 +121,9 @@ function genererWorks(listWorks) {
     const figure = listWorks[i];
     const worksElement = document.createElement('figure');
 
+    const imageIdElement = document.createElement("p");
+    imageIdElement.innerText = figure.id; // Rajout de l'id de l'image pour la suppréssion 
+
     const imageElement = document.createElement('img');
     imageElement.src = figure.imageUrl;
     const titleElement = document.createElement('figcaption');
@@ -128,6 +131,8 @@ function genererWorks(listWorks) {
     const categoryIdElement = document.createElement("p");
     categoryIdElement.innerText = figure.categoryId;
 
+    worksElement.dataset.id = figure.id;
+    worksElement.appendChild(imageIdElement);
     worksElement.appendChild(imageElement);
     worksElement.appendChild(titleElement);
     worksElement.appendChild(categoryIdElement);
@@ -220,6 +225,7 @@ function Modal1() {
         const confirmation = confirm("Voulez-vous vraiment supprimer ce travail ?");
         if (confirmation) {
           const figureId = figure.dataset.id;
+          console.log(figureId);
           if (figureId) {
             try {
               const token = localStorage.getItem("authToken");
@@ -272,9 +278,6 @@ function modal2() {
   const modal2 = modal.querySelector('.modal2');
   const backButton = document.querySelector('.js-modal-back');
   const titleModal = document.querySelector('#titlemodal');
-  const fileInput = document.querySelector('.file-input');
-  const pictureContainer = document.querySelector('.photo-container');
-
   const addPhotoButton = document.querySelector('.js-ajout-photo');
 
   if (modal1 && modal2 && titleModal && addPhotoButton)
@@ -284,64 +287,97 @@ function modal2() {
   addPhotoButton.style.display = "none";
   titleModal.textContent = "Ajout photo";
 
-
   backButton.addEventListener('click', function () {
     resetModal(); // Appelle la fonction pour réinitialiser la modal
   });
+}
 
-  fileInput.addEventListener('change', function () {
+// ================= Partie POST ================= 
+
+const fileInput = document.querySelector('.file-input');
+const pictureContainer = document.getElementById('pictureContainer');
+
+fileInput.addEventListener('change', function () {
+  const file = fileInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      pictureContainer.innerHTML = ''; // Efface le contenu précédent du conteneur de photos pour afficher l'image sélectionnée
+      const imgElement = document.createElement('img');
+      imgElement.src = reader.result; // Charge l'image sélectionnée
+
+      imgElement.style.maxWidth = '129px';
+      imgElement.style.maxHeight = '169px';
+
+      pictureContainer.appendChild(imgElement); // Affiche l'image dans le conteneur
+    };
+    reader.readAsDataURL(file); // Lit le fichier en tant qu'URL de données
+  }
+});
+
+const submitButton = document.querySelector('.valider-photo'); // Sélectionne le bouton de validation
+if (submitButton) {
+  submitButton.addEventListener('click', async function (event) {
+    event.preventDefault();
+
     const file = fileInput.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        pictureContainer.innerHTML = ''; // Efface le contenu précédent du conteneur de photos pour afficher l'image selectionné
-        const imgElement = document.createElement('img');
-        imgElement.src = reader.result; // Charge l'image sélectionnée
-        imgElement.style.maxWidth = '129px';
-        imgElement.style.maxHeight = '169px';
+    console.log(file);
+    const title = document.getElementById('titre').value;
+    const categorySelect = document.getElementById('categorie');
+    const categorieName = categorySelect.value;
 
-        pictureContainer.appendChild(imgElement); // Affiche l'image dans le conteneur
-      };
-      reader.readAsDataURL(file); // Lit le fichier en tant qu'URL de données
+    // Mapping des noms de catégories vers leurs IDs
+    const categoriesMap = {
+      "Objets": 2,
+      "Appartements": 3,
+      "Hotels & restaurants": 4
+    };
+
+    const categorieId = categoriesMap[categorieName];
+
+    if (!file || !title || !categorieId) {
+      alert("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("title", title);
+    formData.append("categoryId", categorieId);
+
+    // Log formData entries for debugging
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    try {
+      const token = localStorage.getItem("authToken"); // Récupère le token depuis localStorage
+      if (!token) {
+        console.error('Token non trouvé.'); // Affiche une erreur si le token n'est pas trouvé
+        return;
+      }
+
+      // Envoie une requête POST pour ajouter un travail avec le token dans les headers
+      const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+          // 'accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData // Ajoute les données du formulaire dans le corps de la requête
+      });
+
+      if (response.ok) {
+        console.log('Travail envoyé avec succès !'); // Affiche un message de succès si l'envoi réussit
+        // closeModal(); // Appelle la fonction pour fermer la modal
+        // fetchData(); // Appelle la fonction pour rafraîchir les données
+      } else {
+        console.error('Erreur lors de l\'envoi des travaux :', response.statusText); // Affiche l'erreur si l'envoi échoue
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi des travaux :', error); // Affiche l'erreur si l'envoi échoue
     }
   });
-
-  const submitButton = document.querySelector('.valider-photo'); // Sélectionne le bouton de validation
-  if (submitButton) {
-    submitButton.addEventListener('click', async function (event) {
-      event.preventDefault();
-
-      const form = document.getElementById('photoForm');
-      const formData = new FormData(form);
-
-      try {
-        const token = localStorage.getItem("authToken"); // Récupère le token JWT depuis localStorage
-        if (!token) {
-          console.error('Token non trouvé.'); // Affiche une erreur si le token n'est pas trouvé
-          return;
-        }
-
-        // Envoie une requête POST pour ajouter un travail avec le token JWT dans les headers
-        const response = await fetch("http://localhost:5678/api/works", {
-          method: "POST",
-          headers: {
-            'Authorization': `Bearer ${token}` // Ajoute le token JWT dans les headers
-          },
-          body: formData // Ajoute les données du formulaire dans le corps de la requête
-        });
-
-        if (response.ok) {
-          console.log('Travail envoyé avec succès !'); // Affiche un message de succès si l'envoi réussit
-          closeModal(); // Appelle la fonction pour fermer la modal
-          fetchData(); // Appelle la fonction pour rafraîchir les données
-        } else {
-          console.error('Erreur lors de l\'envoi des travaux :', response.statusText); // Affiche l'erreur si l'envoi échoue
-        }
-      } catch (error) {
-        console.error('Erreur lors de l\'envoi des travaux :', error); // Affiche l'erreur si l'envoi échoue
-      }
-    });
-  }
 }
 
 // Fonction pour fermer la modale après l'envoi des travaux
