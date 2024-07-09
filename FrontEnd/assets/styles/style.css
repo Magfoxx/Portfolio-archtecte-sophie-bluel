@@ -238,6 +238,7 @@ li img:hover {
 #introduction figure {
 	flex: 1;
 
+
 }
 
 #introduction img {
@@ -278,7 +279,7 @@ li img:hover {
 .category-menu {
 	text-align: center;
 	margin: 0 auto;
-	padding-bottom: 50px;
+	padding-top: 50px;
 }
 
 .gallery {
@@ -622,8 +623,8 @@ footer nav ul {
 form input[type="file"] {
 	position: absolute;
 	font-size: 20px;
-	left: 5px;
-	top: 5px;
+	left: 232px;
+	top: 215px;
 	opacity: 0;
 }
 
