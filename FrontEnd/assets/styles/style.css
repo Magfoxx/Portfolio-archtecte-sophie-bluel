@@ -350,6 +350,10 @@ input[type="submit"] {
 	border-radius: 60px;
 }
 
+#login {
+	font-weight: 700;
+}
+
 #connexion {
 	display: flex;
 	flex-direction: column;
