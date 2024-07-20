@@ -371,7 +371,7 @@ submitButton.addEventListener('click', async function (event) {
     });
 
     if (response.ok) {
-      console.error('Ajout réussi avec succès !');
+      alert('Ajout réussi avec succès !');
     } else {
       console.error('Erreur lors de l\'envoi des travaux :', response.statusText);
     }

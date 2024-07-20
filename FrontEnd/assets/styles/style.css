@@ -661,3 +661,11 @@ form input[type="submit"] {
 	border: none;
 	background-color: #A7A7A7;
 }
+
+#btn-submit {
+	cursor: pointer;
+}
+
+#btn-submit.valid {
+	background-color: #1d6154;
+}
